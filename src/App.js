@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Country from "./components/country/Country";
+import Search from "./components/search/Search";
+
+
+
+
+export default class App extends Component {
+  state = { country: [], search: "" };
+  getCountry = () => {
+    fetch("https://restcountries.com/v2/all")
+      .then((response) => response.json())
+      .then((data) => this.setState({ country: data }));
+  };
+  componentDidMount() {
+    this.getCountry();
+  }
+  onChangeSearch = (e) => {
+    this.setState({ search: e.target.value });
+  };
+  render() {
+    return (
+      <div>
+        <Search onChangeSearch={this.onChangeSearch}/>
+        {this.state.country.length>0&&<Country 
+        country={this.state.country}
+         search={this.state.search} />}
+      </div>
+    );
+  }
 }
-
-export default App;
